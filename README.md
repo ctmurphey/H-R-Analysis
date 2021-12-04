@@ -1,0 +1,17 @@
+# H-R-Analysis
+An analysis of the Hertzsprung-Russell diagram using a small fraction of the data from the most recent data release from [GAIA](https://gea.esac.esa.int/archive/) in a Jupyter Notebook.
+
+## Libraries
+Outside of NumPy, PANDAS and matplotlib (and its toolkit), this program uses [PyMC3](https://pypi.org/project/pymc3/), [PyMC3-ext](https://pypi.org/project/pymc3-ext/) and [Theano](https://pypi.org/project/Theano/) for implementing a Markov-Chain Monte Carlo algorithm. It's best to make sure these are installed in order to run this code.
+
+## Data
+**Note: the files need to be added from the release link below. The files are too large (>100MB) to add in GitHub. The numbers for the files are 020092-020493, 023451-023649, 688632-688658, 786097-786431. I recommend clicking the link then using Ctrl+f to find the correct files**
+
+The 4 .csv files contain the data of thousands of stars taken during the [third GAIA data release](https://cdn.gea.esac.esa.int/Gaia/gedr3/gaia_source/). There are hundreds of more files like these but I felt that not much more would be gained by adding more than the current 4 while the program takes about 20 seconds per set just to load the data into a PANDAS dataframe. The text file gaia_source.header file contains descriptions of all of the data that is included in these data sets. Because small errors in the parallax angle can lead to large errors in the estimated distance, I ignore all entries where the ratio of estimated parallax to estimated parallax error is less than 50.
+
+## Analysis
+The data are first stored into PANDAS dataframes then sorted out. Then the parallax angle measured by the GAIA satellite is converted into a distance. Since the parallax data is stored in units of milliarcseconds(mas), the conversion to parsec is simply d[pc] = 1000/parallax[mas]. Then the galactic coordinates (l,b) of the entries are combined with this distance to get cartesian coodinates to plot in 3D with respect to the sun. The 3D plot shows what small fraction of the full sky this selection of GAIA data covers but the spacing shows that the data points we have make up a reasonable representation of stars in the Milky Way.
+
+The next part of the notebook makes an H-R diagram of the stars, plotting their colors (and therefore temperatures) against their magnitude (log(luminosity)). The GAIA data contains the apparent magnitude (m) in certain bands, of which the most helpful here is the G-band which covers most of the visible spectrum. To convert this into absolute magnitude, we need to calculate the amount of flux decrease caused by distance, known as the distance modulus. The formula for this is mod = -2.5log(d/10pc). After this, to convert the apparent magnitude (m) to absolute magnitude (M, intrinsic to the luminosity), it's just M = m - mod. To make the Hertzprung-Russell (H-R) diagram, plot this absolute magnitude vs color (````bp_rp```` column in the data). Note that this doesn't account for dimming due to dust obstruction. This data is not in the survey and therefor cannot be accounted for in the diagram.
+
+The next goal is to try to find the the slope of the main sequence part of the H-R diagram. This is the cluster of points forming the diagonal line across the plot. This program uses Markov-Chain Monte Carlo to both fit a line and sort out the outliers. In this case, the outliers are the red giants occupying the upper right corner of the graph. We use the PyMC3 and Theano libraries to do this. 
