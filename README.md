@@ -1,5 +1,5 @@
 # H-R-Analysis
-An analysis of the Hertzsprung-Russell diagram using a small fraction of the data from the most recent data release from [GAIA](https://gea.esac.esa.int/archive/) in a Jupyter Notebook.
+An analysis of the Hertzsprung-Russell diagram using a small fraction of the data from the most recent data release from [GAIA](https://gea.esac.esa.int/archive/) in a Jupyter Notebook. This project served as my final project for my Graduate-level Stars class for Fall 2021.
 
 ## Libraries
 Outside of NumPy, PANDAS and matplotlib (and its toolkit), this program uses [PyMC3](https://pypi.org/project/pymc3/), [PyMC3-ext](https://pypi.org/project/pymc3-ext/) and [Theano](https://pypi.org/project/Theano/) for implementing a Markov-Chain Monte Carlo algorithm. It's best to make sure these are installed in order to run this code.
